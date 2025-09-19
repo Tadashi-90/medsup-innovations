@@ -92,34 +92,34 @@ const ContactUs: React.FC = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+1 (555) 123-4567", "+1 (555) 123-4568"],
-      description: "Available 24/7 for urgent inquiries"
+      details: ["+260764323211"],
+      description: "Available for inquiries and orders"
     },
     {
       icon: Mail,
       title: "Email",
-      details: ["info@medsupinnovations.com", "support@medsupinnovations.com"],
-      description: "We respond within 2 hours"
+      details: ["medsupinnovations@gmail.com"],
+      description: "We respond promptly to all inquiries"
     },
     {
       icon: MapPin,
       title: "Address",
-      details: ["123 Healthcare Boulevard", "Medical District, City, State 12345"],
-      description: "Visit our modern facility"
+      details: ["Shop No 8426, along Solwezi-Chingola Road (T5)", "Mitech Market, Solwezi, North Western Province"],
+      description: "Visit our location in Solwezi"
     },
     {
       icon: Clock,
       title: "Business Hours",
-      details: ["Monday - Friday: 8:00 AM - 6:00 PM", "Saturday: 9:00 AM - 2:00 PM"],
-      description: "Emergency support available 24/7"
+      details: ["Monday - Friday: 8:00 AM - 5:00 PM", "Saturday: 9:00 AM - 1:00 PM"],
+      description: "Contact us during business hours"
     }
   ];
 
   const departments = [
-    { icon: Users, name: "Sales & Partnerships", email: "sales@medsupinnovations.com" },
-    { icon: Building, name: "Customer Support", email: "support@medsupinnovations.com" },
-    { icon: Globe, name: "International", email: "international@medsupinnovations.com" },
-    { icon: MessageSquare, name: "Media & Press", email: "media@medsupinnovations.com" }
+    { icon: Users, name: "Sales & Partnerships", email: "medsupinnovations@gmail.com" },
+    { icon: Building, name: "Customer Support", email: "medsupinnovations@gmail.com" },
+    { icon: Globe, name: "International", email: "medsupinnovations@gmail.com" },
+    { icon: MessageSquare, name: "Media & Press", email: "medsupinnovations@gmail.com" }
   ];
 
   return (
@@ -148,7 +148,7 @@ const ContactUs: React.FC = () => {
 
       {/* Contact Information Grid */}
       <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {contactInfo.map((info, index) => {
               const Icon = info.icon;
@@ -170,7 +170,7 @@ const ContactUs: React.FC = () => {
           {/* Main Contact Section */}
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-8 border border-purple-100">
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-4 sm:p-8 border border-purple-100 max-w-sm sm:max-w-none mx-auto lg:mx-0">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Send us a Message</h2>
               
               {isSubmitted && (
@@ -307,8 +307,8 @@ const ContactUs: React.FC = () => {
             </div>
 
             {/* Department Contacts */}
-            <div className="space-y-6">
-              <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-8 border border-purple-100">
+            <div className="space-y-6 max-w-xs sm:max-w-none mx-auto lg:mx-0">
+              <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-3 sm:p-8 border border-purple-100">
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">Department Contacts</h2>
                 <div className="space-y-4">
                   {departments.map((dept, index) => {
@@ -330,7 +330,7 @@ const ContactUs: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl shadow-lg p-8 text-white">
+              <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl shadow-lg p-3 sm:p-8 text-white">
                 <h3 className="text-2xl font-bold mb-4">Need Immediate Assistance?</h3>
                 <p className="text-purple-100 mb-6">
                   For urgent medical supply needs or emergency support, our team is available 24/7.

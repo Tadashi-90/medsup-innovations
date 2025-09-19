@@ -94,8 +94,7 @@ const LandingPage: React.FC = () => {
                 <span className="hero-highlight">Medsup Innovations</span>
               </h1>
               <p className="hero-subtitle">
-                Leading supplier of premium medical equipment, laboratory consumables, and healthcare products. 
-                We provide reliable, high-quality supplies to healthcare facilities, laboratories, and medical professionals across the region.
+                Medsup Innovations Ltd is a Zambian company based in Solwezi, North Western Province. Established on December 22, 2022, we specialize in providing high-quality medical supplies, including instruments, protective clothing, laboratory consumables and reagents etc.
               </p>
             </div>
             <div className="hero-image">

@@ -6,17 +6,11 @@ import {
   ArrowLeft,
   Package,
   Stethoscope,
-  Shield,
-  Truck,
-  Users,
   CheckCircle,
   Activity,
   Microscope,
   Pill,
-  Monitor,
-  Clock,
-  Award,
-  TrendingUp
+  Monitor
 } from 'lucide-react';
 import Footer from '../components/Footer';
 // Using equipment.jpg from public folder

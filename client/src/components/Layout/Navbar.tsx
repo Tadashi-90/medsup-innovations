@@ -4,13 +4,15 @@ import { Bell, User, Search } from 'lucide-react';
 const Navbar: React.FC = () => {
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 fixed w-full top-0 z-50">
-      <div className="px-6 py-4">
+      <div className="px-6 py-2">
         <div className="flex items-center justify-between">
           {/* Logo and Company Name */}
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-medical-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">M</span>
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="MedSup Innovations Ltd" 
+              style={{ width: '150px', height: '100px', objectFit: 'contain' }}
+            />
             <div>
               <h1 className="text-xl font-bold text-gray-900">Medsup Innovation Ltd</h1>
               <p className="text-xs text-gray-500">Medical Supplies Management</p>

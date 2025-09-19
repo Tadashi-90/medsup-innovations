@@ -76,8 +76,9 @@ const AboutUs: React.FC = () => {
             About Medsup Innovations
           </h1>
           <p className="page-hero-subtitle">
-            We're a leading supplier of premium medical equipment, laboratory consumables, and healthcare products, 
-            serving healthcare facilities across the region with quality and reliability.
+            Medsup Innovations Ltd is a Zambian company based in Solwezi, North Western Province. 
+            Established on December 22, 2022, we specialize in providing high-quality medical supplies, 
+            including instruments, protective clothing, laboratory consumables and reagents etc.
           </p>
           <div className="page-hero-icon">
             <Stethoscope className="w-8 h-8 text-white" />
@@ -116,10 +117,10 @@ const AboutUs: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                  To supply healthcare facilities with the highest quality medical equipment, laboratory consumables, 
-                  and healthcare products that enable exceptional patient care. We believe that reliable access to 
-                  premium medical supplies is fundamental to healthcare excellence, and we're committed to being 
-                  your trusted partner in this mission.
+                  To provide healthcare facilities across Zambia and the region with the highest quality medical supplies, 
+                  including instruments, protective clothing, laboratory consumables and reagents. Since our establishment 
+                  in December 2022, we've been committed to being your trusted partner in delivering exceptional healthcare 
+                  through reliable access to premium medical supplies.
                 </p>
                 <div className="flex items-center text-purple-600 font-semibold">
                   <Heart className="w-5 h-5 mr-2" />
@@ -142,9 +143,9 @@ const AboutUs: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                  To be the most trusted and reliable supplier of medical equipment and laboratory consumables 
-                  in the region, known for our exceptional product quality, competitive pricing, and outstanding 
-                  customer service that helps healthcare facilities deliver the best possible patient care.
+                  Our vision is to be the number one supplier of choice for medical and non-medical supplies. 
+                  We intend to grow the value of our business by supplying quality and affordable products 
+                  with persistence and timeliness.
                 </p>
                 <div className="flex items-center text-indigo-600 font-semibold">
                   <Award className="w-5 h-5 mr-2" />

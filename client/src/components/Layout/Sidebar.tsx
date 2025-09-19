@@ -61,7 +61,11 @@ const Sidebar: React.FC = () => {
     <div className="sidebar">
       <div className="sidebar-brand">
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-2 rounded-xl">
-          <Heart className="brand-icon text-white" />
+          <img 
+            src="/logo.png" 
+            alt="MedSup Innovations Ltd" 
+            style={{ width: '150px', height: '90px', objectFit: 'contain' }}
+          />
         </div>
         <span className="sidebar-brand-text">Medsup Innovations</span>
       </div>

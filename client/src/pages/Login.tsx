@@ -141,9 +141,9 @@ const Login: React.FC = () => {
                   />
                   <span>Remember me</span>
                 </label>
-                <a href="#" className="text-sm text-white/80 hover:text-white transition-colors duration-200">
+                <button type="button" className="text-sm text-white/80 hover:text-white transition-colors duration-200 bg-transparent border-none cursor-pointer">
                   Forgot password?
-                </a>
+                </button>
               </div>
 
               <button
@@ -165,9 +165,9 @@ const Login: React.FC = () => {
             <div className="mt-8 text-center">
               <p className="text-white/80 text-sm">
                 Don't have an account?{' '}
-                <a href="#" className="text-white font-medium hover:underline">
+                <button type="button" className="text-white font-medium hover:underline bg-transparent border-none cursor-pointer">
                   Contact your administrator
-                </a>
+                </button>
               </p>
             </div>
           </div>

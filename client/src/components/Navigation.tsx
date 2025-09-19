@@ -30,7 +30,11 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
         <div className="nav-container">
           <div className="nav-brand">
             <div className="brand-icon">
-              <Stethoscope className="brand-stethoscope" />
+              <img 
+                src="/logo.png" 
+                alt="MedSup Innovations Ltd" 
+                style={{ width: '150px', height: '100px', objectFit: 'contain' }}
+              />
             </div>
             <span className="brand-text">Medsup Innovations</span>
           </div>
@@ -91,7 +95,11 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
         <div className="flex justify-between items-center py-4">
           <Link to="/" className="flex items-center space-x-3">
             <div className="bg-white/20 p-2 rounded-xl">
-              <Stethoscope className="w-6 h-6 text-white" />
+              <img 
+                 src="/logo.png" 
+                 alt="MedSup Innovations Ltd" 
+                 style={{ width: '150px', height: '100px', objectFit: 'contain' }}
+               />
             </div>
             <span className="text-xl font-bold text-white">Medsup Innovations</span>
           </Link>

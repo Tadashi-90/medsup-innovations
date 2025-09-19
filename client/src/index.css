@@ -191,8 +191,6 @@ body {
 }
 
 .brand-icon {
-  width: 2rem;
-  height: 2rem;
   color: white;
   display: flex;
   align-items: center;
@@ -2300,10 +2298,27 @@ body {
   }
 }
 
+/* Container consistency - match landing page dimensions */
+.max-w-7xl {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+  /* Global mobile fixes */
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    overflow-x: hidden;
+  }
+  
   .nav-container {
     padding: 0 1rem;
+    position: relative;
   }
   
   .nav-links {
@@ -2313,6 +2328,14 @@ body {
   .nav-cta-btn {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
+    display: none;
+  }
+  
+  .mobile-menu-btn {
+    display: block !important;
+    margin-left: auto;
+    position: relative;
+    z-index: 1001;
   }
   
   .hero-content {
@@ -3301,6 +3324,43 @@ body {
     gap: 2rem;
   }
   
+  .contact-form {
+    padding: 1.5rem;
+    margin: 0 1rem;
+    max-width: calc(100vw - 2rem);
+    box-sizing: border-box;
+  }
+  
+  .form-input,
+  .form-textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .page-hero-content {
+    padding: 0 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+  
+  .page-hero-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  /* Contact page specific mobile fixes */
+  .max-w-7xl {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* Ensure all grid containers are responsive */
+  .grid {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+  
   .footer-content {
     flex-direction: column;
     gap: 1.5rem;
@@ -3331,7 +3391,6 @@ body {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
-}
 
 @media (max-width: 480px) {
   .hero-title {
@@ -3353,6 +3412,25 @@ body {
   .login-card {
     padding: 1.5rem;
   }
+  
+  .contact-form {
+    padding: 1rem;
+    margin: 0 0.5rem;
+    max-width: calc(100vw - 1rem);
+  }
+  
+  .page-hero-title {
+    font-size: 2rem;
+  }
+  
+  .page-hero-content {
+    padding: 0 0.5rem;
+    max-width: calc(100vw - 1rem);
+  }
+  
+  .nav-container {
+    padding: 0 0.5rem;
+  }
 }
 
 /* Mobile Navigation Styles */
@@ -3364,6 +3442,7 @@ body {
   padding: 0.5rem;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
+  display: none;
 }
 
 .mobile-menu {
@@ -3912,7 +3991,7 @@ body {
 /* Page Hero Sections */
 .page-hero {
   position: relative;
-  min-height: 80vh;
+  min-height: 85vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3939,8 +4018,15 @@ body {
   z-index: 2;
   text-align: center;
   color: white;
-  max-width: 800px;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 0 2rem;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 8rem;
 }
 
 .page-hero-badge {
@@ -3988,12 +4074,14 @@ body {
 
 @media (max-width: 768px) {
   .page-hero {
-    min-height: 60vh;
-    padding: 2rem 0;
+    min-height: 70vh;
+    padding-top: 80px;
   }
   
   .page-hero-content {
     padding: 0 1rem;
+    padding-top: 4rem;
+    min-height: 60vh;
     max-width: 100%;
   }
   
