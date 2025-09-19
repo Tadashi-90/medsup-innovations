@@ -14,9 +14,44 @@ import {
   Users,
   Building,
   Globe,
-  MessageSquare
+  MessageSquare,
+  HelpCircle,
+  Plus,
+  Minus,
+  Shield,
+  Truck,
+  CreditCard,
+  FileText,
+  Award,
+  Zap
 } from 'lucide-react';
 // Using equipment.jpg from public folder
+
+// FAQ Item Component
+const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border border-gray-200 rounded-xl overflow-hidden">
+      <button
+        className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="font-semibold text-gray-900">{question}</span>
+        {isOpen ? (
+          <Minus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+        ) : (
+          <Plus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+        )}
+      </button>
+      {isOpen && (
+        <div className="px-6 py-4 bg-white border-t border-gray-200">
+          <p className="text-gray-600 leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ContactUs: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -310,6 +345,139 @@ const ContactUs: React.FC = () => {
                     <span className="font-semibold">urgent@medsupinnovations.com</span>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 via-white to-purple-50">
+        <div className="max-w-6xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
+              <HelpCircle className="w-4 h-4 mr-2" />
+              FREQUENTLY ASKED QUESTIONS
+            </div>
+            <h2 className="text-5xl font-bold text-gray-900 mb-6">Got Questions? We've Got Answers</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Find quick answers to common questions about our medical supplies, ordering process, 
+              and services. Can't find what you're looking for? Contact our expert team.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* FAQ Categories */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center mr-3">
+                    <Shield className="w-5 h-5 text-white" />
+                  </div>
+                  Product & Quality
+                </h3>
+                <div className="space-y-4">
+                  <FAQItem 
+                    question="Are all your medical supplies certified and compliant?"
+                    answer="Yes, all our products meet international quality standards including FDA, CE, and ISO certifications. We work exclusively with verified manufacturers and conduct rigorous quality checks."
+                  />
+                  <FAQItem 
+                    question="Do you offer product warranties?"
+                    answer="We provide comprehensive warranties on all equipment ranging from 1-5 years depending on the product category. Consumables come with quality guarantees and easy return policies."
+                  />
+                  <FAQItem 
+                    question="Can I request product samples before bulk ordering?"
+                    answer="Absolutely! We offer sample programs for most products to ensure they meet your specific requirements before you commit to larger orders."
+                  />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-xl flex items-center justify-center mr-3">
+                    <Truck className="w-5 h-5 text-white" />
+                  </div>
+                  Shipping & Delivery
+                </h3>
+                <div className="space-y-4">
+                  <FAQItem 
+                    question="What are your delivery timeframes?"
+                    answer="Standard delivery is 2-5 business days. Emergency orders can be delivered within 24 hours. We offer real-time tracking for all shipments."
+                  />
+                  <FAQItem 
+                    question="Do you handle temperature-sensitive products?"
+                    answer="Yes, we have specialized cold-chain logistics for temperature-sensitive medical supplies with continuous monitoring and documentation."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* More FAQ Categories */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mr-3">
+                    <CreditCard className="w-5 h-5 text-white" />
+                  </div>
+                  Ordering & Payment
+                </h3>
+                <div className="space-y-4">
+                  <FAQItem 
+                    question="What payment methods do you accept?"
+                    answer="We accept all major credit cards, bank transfers, purchase orders, and offer flexible payment terms for established healthcare facilities."
+                  />
+                  <FAQItem 
+                    question="Can I set up automated recurring orders?"
+                    answer="Yes! Our smart ordering system can automatically reorder your regular supplies based on usage patterns and inventory levels."
+                  />
+                  <FAQItem 
+                    question="Do you offer volume discounts?"
+                    answer="We provide competitive volume pricing and special rates for long-term partnerships. Contact our sales team for custom pricing."
+                  />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center mr-3">
+                    <Award className="w-5 h-5 text-white" />
+                  </div>
+                  Support & Service
+                </h3>
+                <div className="space-y-4">
+                  <FAQItem 
+                    question="Do you provide training on medical equipment?"
+                    answer="Yes, we offer comprehensive training programs, user manuals, and ongoing technical support for all equipment purchases."
+                  />
+                  <FAQItem 
+                    question="What if I need emergency supplies outside business hours?"
+                    answer="Our 24/7 emergency hotline ensures you can reach us anytime for urgent medical supply needs with rapid response protocols."
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ CTA */}
+          <div className="mt-16 text-center">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl p-8 text-white">
+              <div className="flex items-center justify-center mb-4">
+                <Zap className="w-8 h-8 mr-3" />
+                <h3 className="text-2xl font-bold">Still Have Questions?</h3>
+              </div>
+              <p className="text-purple-100 mb-6 text-lg">
+                Our expert team is ready to provide personalized answers and solutions for your specific needs.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button className="bg-white text-purple-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-colors inline-flex items-center justify-center">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Call Us Now
+                </button>
+                <button className="border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white hover:text-purple-600 transition-colors inline-flex items-center justify-center">
+                  <Mail className="w-5 h-5 mr-2" />
+                  Send Message
+                </button>
               </div>
             </div>
           </div>

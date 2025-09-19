@@ -18,10 +18,10 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
 
   const navLinks = [
     { path: '/', label: 'Home' },
-    { path: '/about', label: 'About Us' },
-    { path: '/services', label: 'Services' },
-    { path: '/contact', label: 'Contact Us' },
-    { path: '/articles', label: 'Articles' }
+    { path: '/about', label: 'Company Profile' },
+    { path: '/services', label: 'Products' },
+    { path: '/contact', label: 'Get in Touch' },
+    { path: '/articles', label: 'Insights' }
   ];
 
   if (variant === 'landing') {

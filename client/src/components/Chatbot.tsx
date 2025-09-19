@@ -102,11 +102,11 @@ const Chatbot: React.FC<ChatbotProps> = ({ className = '' }) => {
 
   return (
     <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
-      <div className={`bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-purple-100 transition-all duration-300 ${
+      <div className={`bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-purple-100 transition-all duration-300 flex flex-col ${
         isMinimized ? 'w-80 h-16' : 'w-80 h-96'
       }`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-purple-100 bg-gradient-to-r from-purple-600 to-blue-600 rounded-t-2xl">
+        <div className="flex items-center justify-between p-4 border-b border-purple-100 bg-gradient-to-r from-purple-600 to-blue-600 rounded-t-2xl flex-shrink-0">
           <div className="flex items-center space-x-3">
             <div className="bg-white/20 p-2 rounded-full">
               <Bot className="w-5 h-5 text-white" />
@@ -135,7 +135,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ className = '' }) => {
         {!isMinimized && (
           <>
             {/* Messages */}
-            <div className="flex-1 p-4 h-64 overflow-y-auto space-y-3">
+            <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-0">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -191,7 +191,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ className = '' }) => {
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-purple-100">
+            <div className="p-4 border-t border-purple-100 flex-shrink-0">
               <div className="flex items-center space-x-2">
                 <input
                   type="text"

@@ -86,25 +86,102 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-16 px-4">
+      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Mission</h2>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                To supply healthcare facilities with the highest quality medical equipment, laboratory consumables, 
-                and healthcare products that enable exceptional patient care. We believe that reliable access to 
-                premium medical supplies is fundamental to healthcare excellence, and we're committed to being 
-                your trusted partner in this mission.
-              </p>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
+              <Target className="w-4 h-4 mr-2" />
+              OUR PURPOSE & DIRECTION
             </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Vision</h2>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                To be the most trusted and reliable supplier of medical equipment and laboratory consumables 
-                in the region, known for our exceptional product quality, competitive pricing, and outstanding 
-                customer service that helps healthcare facilities deliver the best possible patient care.
-              </p>
+            <h2 className="text-5xl font-bold text-gray-900 mb-6">Driving Healthcare Excellence</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Our mission and vision guide every decision we make, ensuring we deliver exceptional value 
+              to healthcare facilities and ultimately improve patient outcomes.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Mission Card */}
+            <div className="group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
+              <div className="relative bg-white rounded-3xl p-10 shadow-2xl border border-gray-100 transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300">
+                <div className="flex items-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                    <Target className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-bold text-gray-900">Our Mission</h3>
+                    <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full mt-2"></div>
+                  </div>
+                </div>
+                <p className="text-gray-700 text-lg leading-relaxed mb-6">
+                  To supply healthcare facilities with the highest quality medical equipment, laboratory consumables, 
+                  and healthcare products that enable exceptional patient care. We believe that reliable access to 
+                  premium medical supplies is fundamental to healthcare excellence, and we're committed to being 
+                  your trusted partner in this mission.
+                </p>
+                <div className="flex items-center text-purple-600 font-semibold">
+                  <Heart className="w-5 h-5 mr-2" />
+                  Empowering Healthcare Excellence
+                </div>
+              </div>
+            </div>
+
+            {/* Vision Card */}
+            <div className="group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-blue-700 to-purple-800 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300"></div>
+              <div className="relative bg-white rounded-3xl p-10 shadow-2xl border border-gray-100 transform rotate-1 group-hover:rotate-2 transition-transform duration-300">
+                <div className="flex items-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                    <Shield className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-bold text-gray-900">Our Vision</h3>
+                    <div className="w-12 h-1 bg-gradient-to-r from-indigo-600 to-blue-600 rounded-full mt-2"></div>
+                  </div>
+                </div>
+                <p className="text-gray-700 text-lg leading-relaxed mb-6">
+                  To be the most trusted and reliable supplier of medical equipment and laboratory consumables 
+                  in the region, known for our exceptional product quality, competitive pricing, and outstanding 
+                  customer service that helps healthcare facilities deliver the best possible patient care.
+                </p>
+                <div className="flex items-center text-indigo-600 font-semibold">
+                  <Award className="w-5 h-5 mr-2" />
+                  Leading Healthcare Innovation
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mission & Vision Impact Stats */}
+          <div className="mt-16 bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+            <div className="text-center mb-8">
+              <h4 className="text-2xl font-bold text-gray-900 mb-2">Our Impact in Numbers</h4>
+              <p className="text-gray-600">Measurable results from our mission-driven approach</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              <div className="group">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Users className="w-10 h-10 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-purple-600 mb-2">500+</div>
+                <div className="text-gray-600 font-medium">Healthcare Partners Served</div>
+              </div>
+              <div className="group">
+                <div className="w-20 h-20 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Award className="w-10 h-10 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-indigo-600 mb-2">99.9%</div>
+                <div className="text-gray-600 font-medium">Customer Satisfaction Rate</div>
+              </div>
+              <div className="group">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Heart className="w-10 h-10 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">1M+</div>
+                <div className="text-gray-600 font-medium">Lives Impacted Through Care</div>
+              </div>
             </div>
           </div>
         </div>
@@ -198,27 +275,7 @@ const AboutUs: React.FC = () => {
             ))}
           </div>
 
-          {/* Team Stats */}
-          <div className="mt-16 bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
-            <div className="grid md:grid-cols-4 gap-8 text-center">
-              <div>
-                <div className="text-3xl font-bold text-purple-600 mb-2">80+</div>
-                <div className="text-gray-600 font-medium">Years Combined Experience</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-purple-600 mb-2">15+</div>
-                <div className="text-gray-600 font-medium">Industry Awards</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-purple-600 mb-2">500+</div>
-                <div className="text-gray-600 font-medium">Healthcare Partners</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-purple-600 mb-2">100%</div>
-                <div className="text-gray-600 font-medium">Commitment to Excellence</div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </section>
 
