@@ -82,13 +82,13 @@ const Footer: React.FC = () => {
               </button>
             </div>
             <div className="social-links">
-              <a href="#" className="social-link" aria-label="LinkedIn">
+              <a href="https://linkedin.com/company/medsup-innovations" className="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
                 <Activity className="social-icon" />
               </a>
-              <a href="#" className="social-link" aria-label="Twitter">
+              <a href="https://twitter.com/medsupinnovations" className="social-link" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
                 <TrendingUp className="social-icon" />
               </a>
-              <a href="#" className="social-link" aria-label="Facebook">
+              <a href="https://facebook.com/medsupinnovations" className="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
                 <Users className="social-icon" />
               </a>
             </div>
