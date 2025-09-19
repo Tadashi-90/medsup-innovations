@@ -2161,10 +2161,57 @@ body {
 }
 
 @media (max-width: 768px) {
+  .modern-footer {
+    overflow-x: hidden;
+  }
+  
+  .modern-footer .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    max-width: 100% !important;
+  }
+  
   .footer-main {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 2rem;
     padding: 3rem 0 2rem;
+  }
+  
+  .footer-section {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .footer-brand-section {
+    max-width: 100%;
+  }
+  
+  .footer-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .contact-item {
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+  }
+  
+  .footer-list li a {
+    font-size: 0.85rem;
+  }
+  
+  .newsletter-text {
+    font-size: 0.85rem;
+  }
+  
+  .newsletter-form {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .newsletter-input {
+    min-width: 0;
+    flex: 1;
   }
   
   .footer-bottom-content {
@@ -2175,25 +2222,81 @@ body {
   
   .footer-legal {
     gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .footer-legal a {
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
+  .modern-footer .container {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
   .footer-main {
     padding: 2rem 0 1.5rem;
+    gap: 1.5rem;
+  }
+  
+  .footer-brand .brand-text {
+    font-size: 1.25rem;
+  }
+  
+  .footer-title {
+    font-size: 1.1rem;
+  }
+  
+  .footer-description {
+    font-size: 0.8rem;
+  }
+  
+  .contact-item {
+    font-size: 0.8rem;
+  }
+  
+  .footer-list li a {
+    font-size: 0.8rem;
+  }
+  
+  .newsletter-text {
+    font-size: 0.8rem;
   }
   
   .newsletter-form {
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.5rem;
+  }
+  
+  .newsletter-input {
+    padding: 0.75rem;
   }
   
   .newsletter-btn {
     align-self: stretch;
+    padding: 0.75rem;
   }
   
   .social-links {
     justify-content: center;
+    gap: 0.75rem;
+  }
+  
+  .social-link {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  
+  .footer-legal {
+    gap: 0.75rem;
+  }
+  
+  .footer-legal a {
+    font-size: 0.75rem;
   }
 }
 
@@ -3263,8 +3366,6 @@ body {
   transition: all 0.2s ease;
 }
 
-
-
 .mobile-menu {
   position: absolute;
   top: 100%;
@@ -3308,6 +3409,163 @@ body {
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
+}
+
+/* Mobile Responsiveness Fixes */
+@media (max-width: 768px) {
+  /* Fix navigation container */
+  .nav-container {
+    padding: 0 1rem;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .athena-nav {
+    padding: 0.5rem 0;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .standard-nav {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Ensure all containers are properly contained */
+  .max-w-7xl {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    overflow-x: hidden;
+  }
+  
+  .max-w-6xl {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    overflow-x: hidden;
+  }
+  
+  .max-w-4xl {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    overflow-x: hidden;
+  }
+  
+  /* Fix all container classes */
+  .container {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    overflow-x: hidden;
+  }
+  
+  /* Fix grid layouts for mobile */
+  .grid.lg\\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
+  }
+  
+  .grid.md\\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  
+  .grid.lg\\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  
+  .grid.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  
+  /* Fix flex layouts */
+  .flex.lg\\:flex-row {
+    flex-direction: column !important;
+  }
+  
+  .flex.md\\:flex-row {
+    flex-direction: column !important;
+  }
+  
+  /* Ensure proper spacing */
+  .py-16 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .py-20 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  
+  /* Fix text sizes for mobile */
+  .text-5xl {
+    font-size: 2rem !important;
+    line-height: 1.2;
+  }
+  
+  .text-4xl {
+    font-size: 1.75rem !important;
+    line-height: 1.3;
+  }
+  
+  .text-3xl {
+    font-size: 1.5rem !important;
+    line-height: 1.3;
+  }
+  
+  /* Fix mobile menu positioning */
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
+  }
+  
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+  
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 0.75rem;
+  }
+  
+  .max-w-7xl,
+  .max-w-6xl,
+  .max-w-4xl {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .py-16 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  
+  .py-20 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
 }
 
 
@@ -3730,15 +3988,51 @@ body {
 
 @media (max-width: 768px) {
   .page-hero {
-    min-height: 50vh;
+    min-height: 60vh;
+    padding: 2rem 0;
+  }
+  
+  .page-hero-content {
+    padding: 0 1rem;
+    max-width: 100%;
   }
   
   .page-hero-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
   }
   
   .page-hero-subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+  
+  .page-hero-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-hero {
+    min-height: 55vh;
+    padding: 1.5rem 0;
+  }
+  
+  .page-hero-content {
+    padding: 0 0.75rem;
+  }
+  
+  .page-hero-title {
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+  
+  .page-hero-subtitle {
+    font-size: 0.95rem;
   }
 }
 
