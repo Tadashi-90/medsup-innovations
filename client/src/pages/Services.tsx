@@ -4,7 +4,6 @@ import Navigation from '../components/Navigation';
 import OrderingForm from '../components/OrderingForm';
 import { 
   ArrowLeft,
-  Heart,
   Package,
   Stethoscope,
   Shield,
@@ -17,10 +16,7 @@ import {
   Monitor,
   Clock,
   Award,
-  TrendingUp,
-  ShoppingCart,
-  Eye,
-  Star
+  TrendingUp
 } from 'lucide-react';
 import Footer from '../components/Footer';
 // Using equipment.jpg from public folder
@@ -102,38 +98,7 @@ const Services: React.FC = () => {
     }
   ];
 
-  const benefits = [
-    {
-      icon: Shield,
-      title: "Quality Assurance",
-      description: "All products meet international quality standards and regulatory requirements"
-    },
-    {
-      icon: Truck,
-      title: "Reliable Delivery",
-      description: "Fast and secure delivery with real-time tracking and temperature control"
-    },
-    {
-      icon: Users,
-      title: "Expert Support",
-      description: "Dedicated customer support team with deep healthcare industry knowledge"
-    },
-    {
-      icon: Clock,
-      title: "24/7 Availability",
-      description: "Round-the-clock support for urgent medical supply needs"
-    },
-    {
-      icon: Award,
-      title: "Certified Excellence",
-      description: "ISO certified processes and award-winning service quality"
-    },
-    {
-      icon: TrendingUp,
-      title: "Cost Optimization",
-      description: "Competitive pricing with volume discounts and cost-saving programs"
-    }
-  ];
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50">
