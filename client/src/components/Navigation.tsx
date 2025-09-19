@@ -128,7 +128,7 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 text-white"
+            className="mobile-menu-btn md:hidden p-2 text-white"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -137,13 +137,13 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-white/20 bg-black/20 backdrop-blur-lg">
-            <div className="px-4 py-4 space-y-3">
+          <div className="mobile-menu md:hidden">
+            <div className="mobile-menu-content">
               {navLinks.map((link) => (
                 <Link 
                   key={link.path}
                   to={link.path} 
-                  className={`block py-2 transition-colors ${
+                  className={`mobile-nav-link ${
                     isActive(link.path) 
                       ? 'text-white font-medium' 
                       : 'text-white/80 hover:text-white'
@@ -155,7 +155,7 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
               ))}
               <Link 
                 to="/login" 
-                className="block bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors text-center"
+                className="mobile-nav-cta"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Login
