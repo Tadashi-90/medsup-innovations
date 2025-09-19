@@ -8,7 +8,7 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true;

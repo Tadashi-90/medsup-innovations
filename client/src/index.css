@@ -3597,6 +3597,11 @@ body {
     line-height: 1.3;
   }
   
+  /* Show mobile menu button on mobile */
+  .mobile-menu-btn {
+    display: block !important;
+  }
+  
   /* Fix mobile menu positioning */
   .mobile-menu {
     position: absolute;
