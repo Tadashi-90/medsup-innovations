@@ -4,9 +4,11 @@ import {
   LayoutDashboard, 
   Package, 
   ShoppingCart, 
-  Users,
-  BarChart3,
-  LogOut
+  Users, 
+  BarChart3, 
+  Settings, 
+  LogOut,
+  ArrowLeft 
 } from 'lucide-react';
 import logo from '../../assets/logo.png';
 
@@ -60,14 +62,13 @@ const Sidebar: React.FC = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-brand">
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-2 rounded-xl">
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-3 rounded-xl w-full flex justify-center">
           <img 
             src={logo} 
             alt="MedSup Innovations Ltd" 
-            style={{ width: '150px', height: '90px', objectFit: 'contain' }}
+            style={{ width: '120px', height: '60px', objectFit: 'contain' }}
           />
         </div>
-        <span className="sidebar-brand-text">Medsup Innovations</span>
       </div>
       
       <nav>
@@ -91,20 +92,20 @@ const Sidebar: React.FC = () => {
         </ul>
       </nav>
 
-      <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
-        <button
-          onClick={handleLogout}
-          className="sidebar-nav-link"
-          style={{ 
-            width: '100%', 
-            background: 'none', 
-            border: 'none', 
-            cursor: 'pointer',
-            color: 'var(--danger-color)'
-          }}
+      <div className="sidebar-footer">
+        <a 
+          href="/"
+          className="back-to-site-btn"
         >
-          <LogOut className="sidebar-nav-icon" />
-          <span>Logout</span>
+          <ArrowLeft size={20} />
+          Back to Site
+        </a>
+        <button 
+          onClick={handleLogout}
+          className="logout-btn"
+        >
+          <LogOut size={20} />
+          Logout
         </button>
       </div>
     </div>
