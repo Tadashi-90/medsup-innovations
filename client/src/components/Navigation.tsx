@@ -80,7 +80,7 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
               ))}
               <Link 
                 to="/login" 
-                className="block mt-4 py-3 px-4 bg-white/20 text-white rounded-lg text-center font-medium hover:bg-white/30 transition-colors"
+                className="block mt-4 py-3 px-4 bg-white text-purple-600 rounded-lg text-center font-medium hover:bg-white/95 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Login
@@ -158,7 +158,7 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
               ))}
               <Link 
                 to="/login" 
-                className="block mt-4 py-3 px-4 bg-white/20 text-white rounded-lg text-center font-medium hover:bg-white/30 transition-colors"
+                className="block mt-4 py-3 px-4 bg-white text-purple-600 rounded-lg text-center font-medium hover:bg-white/95 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Login
