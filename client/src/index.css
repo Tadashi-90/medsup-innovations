@@ -4382,18 +4382,46 @@ body {
   top: 1rem;
   left: 1rem;
   z-index: 1001;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  color: #374151;
+  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.875rem;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  color: #ffffff;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .mobile-menu-button:hover {
-  background: #f9fafb;
+  background: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+}
+
+.mobile-menu-button:active {
+  transform: scale(0.95);
+}
+
+.sidebar-close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1002;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.sidebar-close-button:hover {
+  background: rgba(248, 250, 252, 0.95);
+  color: #1f2937;
   transform: scale(1.05);
 }
 
@@ -4406,6 +4434,12 @@ body {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
 }
 
 /* Tablet Styles */
@@ -4436,6 +4470,10 @@ body {
     display: block;
   }
   
+  .mobile-menu-overlay.active {
+    display: block;
+  }
+  
   .dashboard-layout {
     flex-direction: column;
   }
@@ -4461,26 +4499,35 @@ body {
     margin-left: 0;
     padding: 5rem 1rem 1rem 1rem;
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   /* Dashboard specific mobile styles */
   .dashboard-layout .main-content {
     padding-top: 5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Ensure dashboard content is properly spaced on mobile */
+  .dashboard-layout .main-content > div {
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   /* Make dashboard cards stack on mobile */
-  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
-  }
-  
-  .grid.grid-cols-1.lg\\:grid-cols-2 {
+  .grid[class*="grid-cols"] {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
   }
   
   /* Adjust chart containers for mobile */
-  .bg-white\\/70.backdrop-blur-sm.rounded-2xl {
+  .bg-white {
+    padding: 1rem !important;
+  }
+  
+  [class*="backdrop-blur"] {
     padding: 1rem !important;
   }
   
@@ -4541,8 +4588,31 @@ body {
     padding: 4rem 0.75rem 1rem 0.75rem;
   }
   
+  .mobile-menu-button {
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  /* Adjust dashboard cards for very small screens */
+  .bg-white,
+  [class*="backdrop-blur"] {
+    padding: 0.75rem !important;
+    margin-bottom: 1rem;
+  }
+  
+  /* Smaller text on very small screens */
+  .text-3xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-xl {
+    font-size: 1.125rem !important;
+  }
+  
   /* Further reduce padding on very small screens */
-  .bg-white\\/70.backdrop-blur-sm.rounded-2xl {
+  .bg-white,
+  [class*="backdrop-blur"] {
     padding: 0.75rem !important;
     margin: 0.5rem 0 !important;
   }
@@ -4557,7 +4627,7 @@ body {
   }
   
   /* Make metric cards more compact */
-  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 > div {
+  .grid[class*="grid-cols"] > div {
     padding: 1rem !important;
   }
   

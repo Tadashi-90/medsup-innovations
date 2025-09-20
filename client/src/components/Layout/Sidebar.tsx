@@ -78,10 +78,21 @@ const Sidebar: React.FC<SidebarProps> = ({
         onClick={onToggleMobileMenu}
         aria-label="Toggle mobile menu"
       >
-        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        <Menu size={24} />
       </button>
 
       <div className={`sidebar ${isMobileMenuOpen ? 'sidebar-mobile-open' : ''}`}>
+        {/* Mobile close button inside sidebar */}
+        {isMobileMenuOpen && (
+          <button
+            className="sidebar-close-button"
+            onClick={onCloseMobileMenu}
+            aria-label="Close mobile menu"
+          >
+            <X size={20} />
+          </button>
+        )}
+        
         <div className="sidebar-brand">
           <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-3 rounded-xl w-full flex justify-center">
             <img 

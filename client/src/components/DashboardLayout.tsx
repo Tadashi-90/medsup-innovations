@@ -29,7 +29,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       {/* Mobile menu overlay */}
       {isMobileMenuOpen && (
         <div 
-          className="mobile-menu-overlay"
+          className={`mobile-menu-overlay ${isMobileMenuOpen ? 'active' : ''}`}
           onClick={closeMobileMenu}
         />
       )}
