@@ -5,23 +5,13 @@ import { MedicalAnimationsSection } from '../components/MedicalAnimations';
 import OrderingForm from '../components/OrderingForm';
 import { 
   ArrowRight, 
-  CheckCircle, 
   Star, 
   Users, 
   Package, 
-  TrendingUp,
-  Mail,
-  Phone,
-  MapPin,
   Shield,
-  Clock,
-  Award,
   Activity,
   Heart,
-  Stethoscope,
-  Truck,
-  ShoppingCart,
-  Eye
+  Stethoscope
 } from 'lucide-react';
 import Footer from '../components/Footer';
 import doctorGivingMedicine from '../assets/doctor-giving-medicine.png';
@@ -29,34 +19,12 @@ import onlineHealthcare from '../assets/online-healthcare.png';
 import heroScreenshot from '../assets/hero-screenshot.png';
 
 const LandingPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    message: ''
-  });
-
   const [orderingForm, setOrderingForm] = useState({
     isOpen: false,
     productName: '',
     productPrice: '',
     productImage: ''
   });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    alert('Thank you for your inquiry! We will get back to you soon.');
-    setFormData({ name: '', email: '', company: '', message: '' });
-  };
 
   const handleOrderClick = (productName: string, productPrice: string, productImage: string) => {
     setOrderingForm({
