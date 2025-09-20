@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Heart, Users, Award, Shield, Target, ArrowRight, Stethoscope } from 'lucide-react';
-// Using equipment.jpg from public folder
+import equipmentImage from '../assets/equipment.jpg';
 
 const AboutUs: React.FC = () => {
   const values = [
@@ -70,7 +70,7 @@ const AboutUs: React.FC = () => {
       <Navigation variant="landing" />
 
       {/* Hero Section */}
-      <section className="page-hero" style={{ backgroundImage: 'url(/equipment.jpg)' }}>
+      <section className="page-hero" style={{ backgroundImage: `url(${equipmentImage})` }}>
         <div className="page-hero-content">
           <h1 className="page-hero-title">
             About Medsup Innovations

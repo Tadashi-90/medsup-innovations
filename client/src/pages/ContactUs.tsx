@@ -21,7 +21,7 @@ import {
   Award,
   Zap
 } from 'lucide-react';
-// Using equipment.jpg from public folder
+import equipmentImage from '../assets/equipment.jpg';
 
 // FAQ Item Component
 const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
@@ -124,7 +124,7 @@ const ContactUs: React.FC = () => {
       <Navigation variant="landing" />
 
       {/* Hero Section */}
-      <section className="page-hero" style={{ backgroundImage: 'url(/equipment.jpg)' }}>
+      <section className="page-hero" style={{ backgroundImage: `url(${equipmentImage})` }}>
         <div className="page-hero-content">
           <div className="page-hero-badge">
             GET IN TOUCH

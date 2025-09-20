@@ -13,7 +13,7 @@ import {
   Monitor
 } from 'lucide-react';
 import Footer from '../components/Footer';
-// Using equipment.jpg from public folder
+import equipmentImage from '../assets/equipment.jpg';
 
 const Services: React.FC = () => {
   const [orderingForm, setOrderingForm] = useState({
@@ -100,7 +100,7 @@ const Services: React.FC = () => {
       <Navigation variant="landing" />
 
       {/* Hero Section */}
-      <section className="page-hero" style={{ backgroundImage: 'url(/equipment.jpg)' }}>
+      <section className="page-hero" style={{ backgroundImage: `url(${equipmentImage})` }}>
         <div className="page-hero-content">
           <div className="page-hero-badge">
             COMPREHENSIVE HEALTHCARE SOLUTIONS
