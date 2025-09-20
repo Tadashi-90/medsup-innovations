@@ -7,11 +7,23 @@ import {
   Users, 
   BarChart3, 
   LogOut,
-  ArrowLeft 
+  ArrowLeft,
+  Menu,
+  X
 } from 'lucide-react';
 import logo from '../../assets/logo.png';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isMobileMenuOpen?: boolean;
+  onToggleMobileMenu?: () => void;
+  onCloseMobileMenu?: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ 
+  isMobileMenuOpen = false, 
+  onToggleMobileMenu, 
+  onCloseMobileMenu 
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -59,16 +71,26 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-brand">
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-3 rounded-xl w-full flex justify-center">
-          <img 
-            src={logo} 
-            alt="MedSup Innovations Ltd" 
-            style={{ width: '120px', height: '60px', objectFit: 'contain' }}
-          />
+    <>
+      {/* Mobile menu button */}
+      <button
+        className="mobile-menu-button"
+        onClick={onToggleMobileMenu}
+        aria-label="Toggle mobile menu"
+      >
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      <div className={`sidebar ${isMobileMenuOpen ? 'sidebar-mobile-open' : ''}`}>
+        <div className="sidebar-brand">
+          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-3 rounded-xl w-full flex justify-center">
+            <img 
+              src={logo} 
+              alt="MedSup Innovations Ltd" 
+              style={{ width: '120px', height: '60px', objectFit: 'contain' }}
+            />
+          </div>
         </div>
-      </div>
       
       <nav>
         <ul className="sidebar-nav">
@@ -81,6 +103,7 @@ const Sidebar: React.FC = () => {
                 <Link
                   to={item.path}
                   className={`sidebar-nav-link ${active ? 'active' : ''}`}
+                  onClick={onCloseMobileMenu}
                 >
                   <Icon className="sidebar-nav-icon" />
                   <span>{item.name}</span>
@@ -108,6 +131,7 @@ const Sidebar: React.FC = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

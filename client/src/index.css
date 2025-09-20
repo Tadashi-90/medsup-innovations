@@ -4374,3 +4374,194 @@ body {
     align-items: center;
   }
 }
+
+/* Responsive Dashboard Styles */
+.mobile-menu-button {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-button:hover {
+  background: #f9fafb;
+  transform: scale(1.05);
+}
+
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+  }
+  
+  .main-content {
+    margin-left: 220px;
+    padding: 1.5rem;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .mobile-menu-button {
+    display: block;
+  }
+  
+  .mobile-menu-overlay {
+    display: block;
+  }
+  
+  .dashboard-layout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    max-width: 280px;
+    min-width: 280px;
+    height: 100vh;
+    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar-mobile-open {
+    left: 0;
+  }
+  
+  .main-content {
+    margin-left: 0;
+    padding: 5rem 1rem 1rem 1rem;
+    width: 100%;
+  }
+  
+  /* Dashboard specific mobile styles */
+  .dashboard-layout .main-content {
+    padding-top: 5rem;
+  }
+  
+  /* Make dashboard cards stack on mobile */
+  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .grid.grid-cols-1.lg\\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  /* Adjust chart containers for mobile */
+  .bg-white\\/70.backdrop-blur-sm.rounded-2xl {
+    padding: 1rem !important;
+  }
+  
+  /* Make tables responsive */
+  .overflow-x-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .min-w-full {
+    min-width: 600px;
+  }
+  
+  /* Adjust sidebar brand for mobile */
+  .sidebar-brand {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+  }
+  
+  .sidebar-brand img {
+    width: 100px !important;
+    height: 50px !important;
+  }
+  
+  /* Adjust sidebar navigation for mobile */
+  .sidebar-nav-link {
+    padding: 1rem 0.75rem;
+    font-size: 0.95rem;
+  }
+  
+  .sidebar-nav-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+  
+  /* Adjust sidebar footer for mobile */
+  .sidebar-footer {
+    padding-top: 1.5rem;
+    gap: 0.5rem;
+  }
+  
+  .back-to-site-btn,
+  .logout-btn {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100vw;
+    max-width: 100vw;
+    min-width: 100vw;
+  }
+  
+  .main-content {
+    padding: 4rem 0.75rem 1rem 0.75rem;
+  }
+  
+  /* Further reduce padding on very small screens */
+  .bg-white\\/70.backdrop-blur-sm.rounded-2xl {
+    padding: 0.75rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  /* Adjust dashboard header for small screens */
+  .text-3xl.font-bold {
+    font-size: 1.75rem !important;
+  }
+  
+  .text-xl.font-semibold {
+    font-size: 1.25rem !important;
+  }
+  
+  /* Make metric cards more compact */
+  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 > div {
+    padding: 1rem !important;
+  }
+  
+  .text-3xl.font-bold.text-gray-900 {
+    font-size: 2rem !important;
+  }
+}
