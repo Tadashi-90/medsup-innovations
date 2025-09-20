@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { Heart, Calendar, User, ArrowRight, Search, Filter, Clock, Tag, BookOpen } from 'lucide-react';
+import { Calendar, User, ArrowRight, Search, Filter, Clock, Tag, BookOpen } from 'lucide-react';
 // Using equipment.jpg from public folder
 
 const Articles: React.FC = () => {

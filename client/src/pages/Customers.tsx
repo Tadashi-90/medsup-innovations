@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit, Trash2, Users, Mail, Phone, MapPin, Package, Calendar } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Users, Mail, Phone, MapPin, Package } from 'lucide-react';
 
 interface Customer {
   id: number;

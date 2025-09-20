@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Package, User, Mail, Phone, MapPin, CreditCard, Calendar, Lock } from 'lucide-react';
+import { X, Package, User, MapPin, CreditCard, Lock } from 'lucide-react';
 
 interface OrderingFormProps {
   isOpen: boolean;
