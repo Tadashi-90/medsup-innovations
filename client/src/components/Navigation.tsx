@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 interface NavigationProps {
   variant?: 'landing' | 'standard';
@@ -31,7 +32,7 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
           <div className="nav-brand">
             <div className="brand-icon">
               <img 
-                src="/logo.png" 
+                src={logo} 
                 alt="MedSup Innovations Ltd" 
                 style={{ width: '166px', height: '100px', objectFit: 'contain' }}
               />
@@ -99,7 +100,7 @@ const Navigation: React.FC<NavigationProps> = ({ variant = 'standard' }) => {
           <Link to="/" className="flex items-center space-x-3">
             <div className="bg-white/20 p-2 rounded-xl">
               <img 
-                 src="/logo.png" 
+                 src={logo} 
                  alt="MedSup Innovations Ltd" 
                  style={{ width: '166px', height: '100px', objectFit: 'contain' }}
                />

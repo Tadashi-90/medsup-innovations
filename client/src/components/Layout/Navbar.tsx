@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bell, User, Search } from 'lucide-react';
+import logo from '../../assets/logo.png';
 
 const Navbar: React.FC = () => {
   return (
@@ -9,7 +10,7 @@ const Navbar: React.FC = () => {
           {/* Logo and Company Name */}
           <div className="flex items-center space-x-3">
             <img 
-              src="/logo.png" 
+              src={logo} 
               alt="MedSup Innovations Ltd" 
               style={{ width: '150px', height: '100px', objectFit: 'contain' }}
             />

@@ -8,6 +8,7 @@ import {
   BarChart3,
   LogOut
 } from 'lucide-react';
+import logo from '../../assets/logo.png';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
@@ -61,7 +62,7 @@ const Sidebar: React.FC = () => {
       <div className="sidebar-brand">
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-2 rounded-xl">
           <img 
-            src="/logo.png" 
+            src={logo} 
             alt="MedSup Innovations Ltd" 
             style={{ width: '150px', height: '90px', objectFit: 'contain' }}
           />
