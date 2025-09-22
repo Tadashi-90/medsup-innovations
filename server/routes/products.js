@@ -1,157 +1,154 @@
 const express = require('express');
 const router = express.Router();
-const database = require('../database/database');
-const db = database.getDb();
+const database = require('../database/postgres');
+const { authenticateToken, authorizeRoles, optionalAuth } = require('../middleware/auth');
 
 // GET /api/products - Get all products with optional filtering
-router.get('/', (req, res) => {
-  const { category, search, limit = 50, offset = 0 } = req.query;
-  
-  let query = `
-    SELECT p.*, i.current_stock, i.minimum_stock, i.location
-    FROM products p
-    LEFT JOIN inventory i ON p.id = i.product_id
-    WHERE 1=1
-  `;
-  const params = [];
+router.get('/', async (req, res) => {
+  try {
+    const { category, search, limit = 50, offset = 0 } = req.query;
+    
+    let query = `
+      SELECT p.*, i.current_stock, i.available_stock, i.location, s.name as supplier_name
+      FROM products p
+      LEFT JOIN inventory i ON p.id = i.product_id
+      LEFT JOIN product_suppliers ps ON p.id = ps.product_id AND ps.is_preferred = true
+      LEFT JOIN suppliers s ON ps.supplier_id = s.id
+      WHERE p.is_active = true
+    `;
+    const params = [];
+    let paramCount = 1;
 
-  if (category) {
-    query += ' AND p.category = ?';
-    params.push(category);
-  }
-
-  if (search) {
-    query += ' AND (p.name LIKE ? OR p.description LIKE ? OR p.sku LIKE ?)';
-    const searchTerm = `%${search}%`;
-    params.push(searchTerm, searchTerm, searchTerm);
-  }
-
-  query += ' ORDER BY p.name LIMIT ? OFFSET ?';
-  params.push(parseInt(limit), parseInt(offset));
-
-  db.all(query, params, (err, rows) => {
-    if (err) {
-      console.error('Error fetching products:', err);
-      return res.status(500).json({ error: 'Failed to fetch products' });
+    if (category) {
+      query += ` AND p.category = $${paramCount}`;
+      params.push(category);
+      paramCount++;
     }
-    res.json(rows);
-  });
+
+    if (search) {
+      query += ` AND (p.name ILIKE $${paramCount} OR p.description ILIKE $${paramCount + 1} OR p.sku ILIKE $${paramCount + 2})`;
+      const searchTerm = `%${search}%`;
+      params.push(searchTerm, searchTerm, searchTerm);
+      paramCount += 3;
+    }
+
+    query += ` ORDER BY p.name LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+    params.push(parseInt(limit), parseInt(offset));
+
+    const result = await database.query(query, params);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
 });
 
 // GET /api/products/:id - Get single product
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  
-  const query = `
-    SELECT p.*, i.current_stock, i.minimum_stock, i.maximum_stock, 
-           i.location, i.batch_number, i.expiry_date, s.name as supplier_name
-    FROM products p
-    LEFT JOIN inventory i ON p.id = i.product_id
-    LEFT JOIN suppliers s ON i.supplier_id = s.id
-    WHERE p.id = ?
-  `;
-
-  db.get(query, [id], (err, row) => {
-    if (err) {
-      console.error('Error fetching product:', err);
-      return res.status(500).json({ error: 'Failed to fetch product' });
-    }
-    if (!row) {
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await database.getProductById(id);
+    
+    if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
-    res.json(row);
-  });
+    
+    res.json(product);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({ error: 'Failed to fetch product' });
+  }
 });
 
 // POST /api/products - Create new product
-router.post('/', (req, res) => {
-  const {
-    name, description, category, subcategory, sku, manufacturer,
-    unit_price, unit_of_measure, regulatory_info, storage_requirements, shelf_life_months
-  } = req.body;
+router.post('/', async (req, res) => {
+  try {
+    const {
+      name, description, category, sku, manufacturer,
+      unit_price, cost_price, unit_of_measure, reorder_point, reorder_quantity
+    } = req.body;
 
-  if (!name || !category || !sku || !unit_price || !unit_of_measure) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-
-  const query = `
-    INSERT INTO products (name, description, category, subcategory, sku, manufacturer, unit_price, unit_of_measure, regulatory_info, storage_requirements, shelf_life_months)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  db.run(query, [
-    name, description, category, subcategory, sku, manufacturer,
-    unit_price, unit_of_measure, regulatory_info, storage_requirements, shelf_life_months
-  ], function(err) {
-    if (err) {
-      console.error('Error creating product:', err);
-      if (err.message.includes('UNIQUE constraint failed')) {
-        return res.status(400).json({ error: 'SKU already exists' });
-      }
-      return res.status(500).json({ error: 'Failed to create product' });
+    if (!name || !category || !sku || !unit_price || !unit_of_measure) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
-    res.status(201).json({ id: this.lastID, message: 'Product created successfully' });
-  });
+
+    const productData = {
+      name, description, category, sku, manufacturer,
+      unit_price, cost_price, unit_of_measure, reorder_point, reorder_quantity
+    };
+
+    const product = await database.createProduct(productData);
+    res.status(201).json({ 
+      id: product.id, 
+      message: 'Product created successfully',
+      product 
+    });
+  } catch (error) {
+    console.error('Error creating product:', error);
+    if (error.message.includes('duplicate key')) {
+      return res.status(400).json({ error: 'SKU already exists' });
+    }
+    res.status(500).json({ error: 'Failed to create product' });
+  }
 });
 
 // PUT /api/products/:id - Update product
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const {
-    name, description, category, subcategory, sku, manufacturer,
-    unit_price, unit_of_measure, regulatory_info, storage_requirements, shelf_life_months
-  } = req.body;
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      name, description, category, sku, manufacturer,
+      unit_price, cost_price, unit_of_measure, reorder_point, reorder_quantity
+    } = req.body;
 
-  const query = `
-    UPDATE products 
-    SET name = ?, description = ?, category = ?, subcategory = ?, sku = ?, 
-        manufacturer = ?, unit_price = ?, unit_of_measure = ?, regulatory_info = ?, 
-        storage_requirements = ?, shelf_life_months = ?, updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-  `;
+    const productData = {
+      name, description, category, sku, manufacturer,
+      unit_price, cost_price, unit_of_measure, reorder_point, reorder_quantity
+    };
 
-  db.run(query, [
-    name, description, category, subcategory, sku, manufacturer,
-    unit_price, unit_of_measure, regulatory_info, storage_requirements, shelf_life_months, id
-  ], function(err) {
-    if (err) {
-      console.error('Error updating product:', err);
-      return res.status(500).json({ error: 'Failed to update product' });
-    }
-    if (this.changes === 0) {
+    const product = await database.updateProduct(id, productData);
+    
+    if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
-    res.json({ message: 'Product updated successfully' });
-  });
+    
+    res.json({ 
+      message: 'Product updated successfully',
+      product 
+    });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ error: 'Failed to update product' });
+  }
 });
 
 // DELETE /api/products/:id - Delete product
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-
-  db.run('DELETE FROM products WHERE id = ?', [id], function(err) {
-    if (err) {
-      console.error('Error deleting product:', err);
-      return res.status(500).json({ error: 'Failed to delete product' });
-    }
-    if (this.changes === 0) {
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const success = await database.deleteProduct(id);
+    
+    if (!success) {
       return res.status(404).json({ error: 'Product not found' });
     }
+    
     res.json({ message: 'Product deleted successfully' });
-  });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ error: 'Failed to delete product' });
+  }
 });
 
 // GET /api/products/categories - Get all categories
-router.get('/meta/categories', (req, res) => {
-  const query = 'SELECT DISTINCT category FROM products ORDER BY category';
-  
-  db.all(query, [], (err, rows) => {
-    if (err) {
-      console.error('Error fetching categories:', err);
-      return res.status(500).json({ error: 'Failed to fetch categories' });
-    }
-    res.json(rows.map(row => row.category));
-  });
+router.get('/meta/categories', async (req, res) => {
+  try {
+    const query = 'SELECT DISTINCT category FROM products WHERE is_active = true ORDER BY category';
+    const result = await database.query(query);
+    res.json(result.rows.map(row => row.category));
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'Failed to fetch categories' });
+  }
 });
 
 module.exports = router;

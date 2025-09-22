@@ -11,11 +11,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 interface DashboardStats {
   total_products: number;
-  active_customers: number;
+  total_customers: number;
   pending_orders: number;
-  low_stock_alerts: number;
-  expiring_soon_alerts: number;
-  total_inventory_value: number;
+  low_stock_items: number;
+  monthly_sales: number;
 }
 
 interface RecentOrder {
@@ -32,48 +31,46 @@ const Dashboard: React.FC = () => {
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Mock data for demo - in real app this would come from API
+  // Fetch live data from API
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setStats({
-        total_products: 156,
-        active_customers: 45,
-        pending_orders: 12,
-        low_stock_alerts: 3,
-        expiring_soon_alerts: 2,
-        total_inventory_value: 125000
-      });
-
-      setRecentOrders([
-        {
-          id: 1,
-          order_number: 'ORD-2024001',
-          customer_name: 'Royal London Hospital',
-          total_amount: 2500.00,
-          status: 'pending',
-          order_date: '2024-01-15'
-        },
-        {
-          id: 2,
-          order_number: 'ORD-2024002',
-          customer_name: 'Cambridge Research Labs',
-          total_amount: 1800.00,
-          status: 'confirmed',
-          order_date: '2024-01-14'
-        },
-        {
-          id: 3,
-          order_number: 'ORD-2024003',
-          customer_name: 'City Medical Clinic',
-          total_amount: 950.00,
-          status: 'shipped',
-          order_date: '2024-01-13'
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch dashboard stats
+        const statsResponse = await fetch('http://localhost:5003/api/dashboard', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setStats(statsData);
         }
-      ]);
 
-      setLoading(false);
-    }, 1000);
+        // Fetch recent orders
+        const ordersResponse = await fetch('http://localhost:5003/api/orders?limit=5&sort=created_at&order=desc', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (ordersResponse.ok) {
+          const ordersData = await ordersResponse.json();
+          setRecentOrders(ordersData.slice(0, 3)); // Show only top 3 recent orders
+        }
+
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
   }, []);
 
   const salesData = [
@@ -138,9 +135,9 @@ const Dashboard: React.FC = () => {
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-purple-100 hover:shadow-xl transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Customers</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{stats?.active_customers}</p>
-                <p className="text-xs text-green-600 mt-1">+8% from last month</p>
+                <p className="text-sm font-medium text-gray-600">Total Customers</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">{stats?.total_customers}</p>
+                <p className="text-xs text-green-600 mt-1">Active customers</p>
               </div>
               <div className="bg-green-100 p-3 rounded-xl">
                 <Users className="w-8 h-8 text-green-600" />
@@ -164,9 +161,9 @@ const Dashboard: React.FC = () => {
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-purple-100 hover:shadow-xl transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Inventory Value</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">£{stats?.total_inventory_value?.toLocaleString()}</p>
-                <p className="text-xs text-blue-600 mt-1">+15% from last month</p>
+                <p className="text-sm font-medium text-gray-600">Monthly Sales</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">£{stats?.monthly_sales?.toLocaleString()}</p>
+                <p className="text-xs text-blue-600 mt-1">Last 30 days</p>
               </div>
               <div className="bg-blue-100 p-3 rounded-xl">
                 <DollarSign className="w-8 h-8 text-blue-600" />
@@ -176,39 +173,24 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Alerts */}
-        {(stats?.low_stock_alerts || stats?.expiring_soon_alerts) && (
+        {stats && stats.low_stock_items > 0 && (
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-purple-100">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
               <AlertTriangle className="w-6 h-6 text-purple-600 mr-2" />
               System Alerts
             </h2>
             <div className="space-y-4">
-              {stats?.low_stock_alerts > 0 && (
-                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="bg-yellow-100 p-2 rounded-lg">
-                      <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                    </div>
-                    <div>
-                      <span className="font-semibold text-yellow-800">{stats.low_stock_alerts} products are running low on stock</span>
-                      <p className="text-sm text-yellow-600 mt-1">Immediate restocking required</p>
-                    </div>
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-yellow-100 p-2 rounded-lg">
+                    <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-yellow-800">{stats.low_stock_items} products are running low on stock</span>
+                    <p className="text-sm text-yellow-600 mt-1">Immediate restocking required</p>
                   </div>
                 </div>
-              )}
-              {stats?.expiring_soon_alerts > 0 && (
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="bg-blue-100 p-2 rounded-lg">
-                      <AlertTriangle className="w-5 h-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <span className="font-semibold text-blue-800">{stats.expiring_soon_alerts} products expire within 3 months</span>
-                      <p className="text-sm text-blue-600 mt-1">Review inventory rotation</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         )}
@@ -315,7 +297,7 @@ const Dashboard: React.FC = () => {
                       {order.customer_name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                      £{order.total_amount.toFixed(2)}
+                      £{Number(order.total_amount).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${

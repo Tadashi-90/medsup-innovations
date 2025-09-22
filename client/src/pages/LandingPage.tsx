@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import { MedicalAnimationsSection } from '../components/MedicalAnimations';
@@ -18,6 +18,16 @@ import doctorGivingMedicine from '../assets/doctor-giving-medicine.png';
 import onlineHealthcare from '../assets/online-healthcare.png';
 import heroScreenshot from '../assets/hero-screenshot.png';
 
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  unit_price: string;
+  category: string;
+  manufacturer: string;
+  is_active: boolean;
+}
+
 const LandingPage: React.FC = () => {
   const [orderingForm, setOrderingForm] = useState({
     isOpen: false,
@@ -25,6 +35,57 @@ const LandingPage: React.FC = () => {
     productPrice: '',
     productImage: ''
   });
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch featured products from API
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:5003/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        // Get first 4 active products for featured section
+        const activeProducts = data.filter((product: Product) => product.is_active);
+        setFeaturedProducts(activeProducts.slice(0, 4));
+      } catch (error) {
+        console.error('Error fetching featured products:', error);
+        setFeaturedProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
+
+  // Function to get appropriate image based on product category/name
+  const getProductImage = (product: Product) => {
+    const name = product.name.toLowerCase();
+    const category = product.category.toLowerCase();
+    
+    if (name.includes('thermometer') || name.includes('temperature')) {
+      return 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop&crop=center';
+    } else if (name.includes('stethoscope')) {
+      return 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=250&fit=crop&crop=center';
+    } else if (name.includes('mask') || name.includes('glove') || name.includes('protective') || category.includes('safety')) {
+      return 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=400&h=250&fit=crop&crop=center';
+    } else if (name.includes('monitor') || name.includes('pressure') || name.includes('oximeter') || category.includes('diagnostic')) {
+      return 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=250&fit=crop&crop=center';
+    } else if (name.includes('syringe') || name.includes('needle') || category.includes('consumables')) {
+      return 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&h=250&fit=crop&crop=center';
+    } else if (name.includes('bandage') || name.includes('gauze') || name.includes('dressing')) {
+      return 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=250&fit=crop&crop=center';
+    } else if (category.includes('laboratory')) {
+      return 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=250&fit=crop&crop=center';
+    } else {
+      // Default medical equipment image
+      return 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop&crop=center';
+    }
+  };
 
   const handleOrderClick = (productName: string, productPrice: string, productImage: string) => {
     setOrderingForm({
@@ -184,123 +245,52 @@ const LandingPage: React.FC = () => {
         <div className="container">
           <h2 className="section-title">Featured Products</h2>
           <p className="section-subtitle">Discover our most popular medical supplies and equipment</p>
-          <div className="products-grid">
-            <div className="product-card">
-              <div className="product-image-full">
-                <img 
-                  src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop&crop=center" 
-                  alt="Digital Thermometer" 
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">Digital Thermometers</h3>
-                <p className="product-description">Accurate and fast digital thermometers for precise temperature readings. Perfect for medical professionals and home use.</p>
-                <div className="product-pricing">
-                  <span className="current-price">£22.49</span>
-                </div>
-                <div className="product-actions">
-                  <button 
-                    className="buy-btn"
-                    onClick={() => handleOrderClick(
-                      'Digital Thermometers', 
-                      '£22.49', 
-                      'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop&crop=center'
-                    )}
-                  >
-                    Order
-                  </button>
-                </div>
-              </div>
+          
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
             </div>
-            
-            <div className="product-card">
-              <div className="product-image-full">
-                <img 
-                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=250&fit=crop&crop=center" 
-                  alt="Professional Stethoscope" 
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">Professional Stethoscopes</h3>
-                <p className="product-description">High-quality stethoscopes with superior acoustic performance. Essential diagnostic tools for healthcare professionals.</p>
-                <div className="product-pricing">
-                  <span className="current-price">£112.49</span>
-                </div>
-                <div className="product-actions">
-                  <button 
-                    className="buy-btn"
-                    onClick={() => handleOrderClick(
-                      'Professional Stethoscopes', 
-                      '£112.49', 
-                      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=250&fit=crop&crop=center'
-                    )}
-                  >
-                    Order
-                  </button>
-                </div>
-              </div>
+          ) : (
+            <div className="products-grid">
+              {featuredProducts.map((product) => {
+                const productImage = getProductImage(product);
+                const formattedPrice = `£${parseFloat(product.unit_price).toFixed(2)}`;
+                
+                return (
+                  <div key={product.id} className="product-card">
+                    <div className="product-image-full">
+                      <img 
+                        src={productImage}
+                        alt={product.name}
+                        className="w-full h-48 object-cover"
+                      />
+                    </div>
+                    <div className="product-content">
+                      <h3 className="product-title">{product.name}</h3>
+                      <p className="product-description">
+                        {product.description || `High-quality ${product.name.toLowerCase()} from ${product.manufacturer}. Essential medical equipment for healthcare professionals.`}
+                      </p>
+                      <div className="product-pricing">
+                        <span className="current-price">{formattedPrice}</span>
+                      </div>
+                      <div className="product-actions">
+                        <button 
+                          className="buy-btn"
+                          onClick={() => handleOrderClick(
+                            product.name, 
+                            formattedPrice, 
+                            productImage
+                          )}
+                        >
+                          Order
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            
-            <div className="product-card">
-              <div className="product-image-full">
-                <img 
-                  src="https://images.unsplash.com/photo-1584515933487-779824d29309?w=400&h=250&fit=crop&crop=center" 
-                  alt="Protective Equipment" 
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">Protective Equipment</h3>
-                <p className="product-description">Complete range of protective equipment including masks, gloves, and safety gear. Ensuring maximum protection for healthcare workers.</p>
-                <div className="product-pricing">
-                  <span className="current-price">£9.74</span>
-                </div>
-                <div className="product-actions">
-                  <button 
-                    className="buy-btn"
-                    onClick={() => handleOrderClick(
-                      'Protective Equipment', 
-                      '£9.74', 
-                      'https://images.unsplash.com/photo-1584515933487-779824d29309?w=400&h=250&fit=crop&crop=center'
-                    )}
-                  >
-                    Order
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <div className="product-card">
-              <div className="product-image-full">
-                <img 
-                  src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=250&fit=crop&crop=center" 
-                  alt="Monitoring Equipment" 
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">Monitoring Devices</h3>
-                <p className="product-description">Advanced patient monitoring systems for continuous health tracking. Real-time data collection and analysis for better patient care.</p>
-                <div className="product-pricing">
-                  <span className="current-price">£224.99</span>
-                </div>
-                <div className="product-actions">
-                  <button 
-                    className="buy-btn"
-                    onClick={() => handleOrderClick(
-                      'Monitoring Devices', 
-                      '£224.99', 
-                      'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=250&fit=crop&crop=center'
-                    )}
-                  >
-                    Order
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
           
           <div className="products-cta">
             <p>Explore our complete catalog of medical supplies and equipment</p>

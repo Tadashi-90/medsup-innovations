@@ -2,20 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Search, Edit, Trash2, Package, Filter } from 'lucide-react';
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   description: string;
   category: string;
   subcategory: string;
   sku: string;
   manufacturer: string;
-  unit_price: number;
+  model_number: string;
+  unit_price: string;
+  cost_price: string;
   unit_of_measure: string;
-  regulatory_info: string;
+  regulatory_approval: string;
+  lot_tracking_required: boolean;
+  expiry_tracking_required: boolean;
+  temperature_controlled: boolean;
+  storage_temperature_min: string | null;
+  storage_temperature_max: string | null;
   storage_requirements: string;
   shelf_life_months: number;
-  current_stock?: number;
-  minimum_stock?: number;
+  hazardous_material: boolean;
+  reorder_point: number;
+  reorder_quantity: number;
+  lead_time_days: number;
+  is_active: boolean;
+  weight_kg: string;
+  dimensions_cm: string;
+  barcode: string;
+  qr_code: string | null;
+  created_at: string;
+  updated_at: string;
+  current_stock: number;
+  available_stock: number;
+  location: string;
+  supplier_name: string;
 }
 
 const Products: React.FC = () => {
@@ -24,102 +44,39 @@ const Products: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Mock data for demo
+  // Fetch products from API
   useEffect(() => {
-    setTimeout(() => {
-      setProducts([
-        {
-          id: 1,
-          name: 'Disposable Nitrile Gloves',
-          description: 'Powder-free, latex-free examination gloves',
-          category: 'Personal Protective Equipment',
-          subcategory: 'Gloves',
-          sku: 'PPE-GLV-001',
-          manufacturer: 'MedSafe Ltd',
-          unit_price: 12.99,
-          unit_of_measure: 'Box of 100',
-          regulatory_info: 'CE Marked, FDA Approved',
-          storage_requirements: 'Store in cool, dry place',
-          shelf_life_months: 60,
-          current_stock: 150,
-          minimum_stock: 50
-        },
-        {
-          id: 2,
-          name: 'Sterile Petri Dishes',
-          description: '90mm sterile polystyrene petri dishes',
-          category: 'Laboratory Consumables',
-          subcategory: 'Culture Dishes',
-          sku: 'LAB-PET-001',
-          manufacturer: 'LabTech Solutions',
-          unit_price: 45.50,
-          unit_of_measure: 'Pack of 20',
-          regulatory_info: 'Sterile, Gamma Irradiated',
-          storage_requirements: 'Store at room temperature',
-          shelf_life_months: 36,
-          current_stock: 75,
-          minimum_stock: 20
-        },
-        {
-          id: 3,
-          name: 'Digital Thermometer',
-          description: 'Non-contact infrared thermometer',
-          category: 'Medical Devices',
-          subcategory: 'Diagnostic Equipment',
-          sku: 'MED-THM-001',
-          manufacturer: 'TempCheck Pro',
-          unit_price: 89.99,
-          unit_of_measure: 'Each',
-          regulatory_info: 'CE Marked, Medical Device Class IIa',
-          storage_requirements: 'Store at 10-40°C',
-          shelf_life_months: 120,
-          current_stock: 25,
-          minimum_stock: 10
-        },
-        {
-          id: 4,
-          name: 'Micropipette Tips',
-          description: '1000μL sterile pipette tips',
-          category: 'Laboratory Consumables',
-          subcategory: 'Pipetting',
-          sku: 'LAB-TIP-001',
-          manufacturer: 'PrecisionLab',
-          unit_price: 28.75,
-          unit_of_measure: 'Box of 1000',
-          regulatory_info: 'DNase/RNase Free, Sterile',
-          storage_requirements: 'Store in original packaging',
-          shelf_life_months: 60,
-          current_stock: 200,
-          minimum_stock: 100
-        },
-        {
-          id: 5,
-          name: 'Surgical Face Masks',
-          description: 'Type IIR surgical masks with ear loops',
-          category: 'Personal Protective Equipment',
-          subcategory: 'Face Protection',
-          sku: 'PPE-MSK-001',
-          manufacturer: 'SafeGuard Medical',
-          unit_price: 15.99,
-          unit_of_measure: 'Box of 50',
-          regulatory_info: 'CE Marked, EN 14683:2019',
-          storage_requirements: 'Store in dry conditions',
-          shelf_life_months: 60,
-          current_stock: 80,
-          minimum_stock: 30
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:5003/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
         }
-      ]);
-      setLoading(false);
-    }, 1000);
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        // You could set an error state here if needed
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-  const categories = ['Personal Protective Equipment', 'Laboratory Consumables', 'Medical Devices'];
+  const categories = ['consumables', 'diagnostic_tools', 'laboratory_equipment', 'medical_devices', 'pharmaceuticals', 'safety_equipment'];
+
+  const formatCategoryName = (category: string) => {
+    return category.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.manufacturer.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !selectedCategory || product.category === selectedCategory;
+                         (product.sku && product.sku.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                         (product.manufacturer && product.manufacturer.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCategory = selectedCategory === 'all' || selectedCategory === '' || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -182,9 +139,9 @@ const Products: React.FC = () => {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="border border-purple-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
               >
-                <option value="">All Categories</option>
+                <option value="all">All Categories</option>
                 {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
+                  <option key={category} value={category}>{formatCategoryName(category)}</option>
                 ))}
               </select>
             </div>
@@ -198,7 +155,7 @@ const Products: React.FC = () => {
       {/* Products Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProducts.map((product) => {
-          const stockStatus = getStockStatus(product.current_stock, product.minimum_stock);
+          const stockStatus = getStockStatus(product.current_stock, product.reorder_point);
           return (
             <div key={product.id} className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-purple-100">
               <div className="flex items-start justify-between mb-4">
@@ -226,7 +183,7 @@ const Products: React.FC = () => {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Category:</span>
-                  <span className="font-medium">{product.category}</span>
+                  <span className="font-medium">{formatCategoryName(product.category)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Manufacturer:</span>
@@ -255,7 +212,29 @@ const Products: React.FC = () => {
 
               {/* Regulatory Info */}
               <div className="mt-4 pt-4 border-t border-purple-100">
-                <p className="text-xs text-purple-600 font-medium">{product.regulatory_info}</p>
+                <p className="text-xs text-purple-600 font-medium">{product.regulatory_approval}</p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mt-4 flex justify-end space-x-2">
+                <button
+                  onClick={() => alert(`Edit product: ${product.name}\nEdit functionality coming soon!`)}
+                  className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors duration-200"
+                  title="Edit Product"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    if (window.confirm(`Are you sure you want to delete ${product.name}?`)) {
+                      alert('Delete functionality coming soon!');
+                    }
+                  }}
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                  title="Delete Product"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
           );

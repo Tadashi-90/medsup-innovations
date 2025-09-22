@@ -362,7 +362,11 @@ const Orders: React.FC = () => {
                         >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="text-gray-600 hover:text-gray-900 flex items-center">
+                        <button 
+                          onClick={() => alert(`Edit order: ${order.order_number}\nEdit functionality coming soon!`)}
+                          className="text-gray-600 hover:text-gray-900 flex items-center"
+                          title="Edit Order"
+                        >
                           <Edit className="w-4 h-4" />
                         </button>
                       </div>

@@ -1,176 +1,137 @@
 const express = require('express');
 const router = express.Router();
-const database = require('../database/database');
-const db = database.getDb();
+const database = require('../database/postgres');
+const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
-// GET /api/orders - Get all orders
-router.get('/', (req, res) => {
-  const { status, customer_id, limit = 50, offset = 0 } = req.query;
-  
-  let query = `
-    SELECT o.*, c.name as customer_name, c.type as customer_type
-    FROM orders o
-    JOIN customers c ON o.customer_id = c.id
-    WHERE 1=1
-  `;
-  const params = [];
-
-  if (status) {
-    query += ' AND o.status = ?';
-    params.push(status);
+// GET /api/orders - Get all orders (requires authentication)
+router.get('/', authenticateToken, async (req, res) => {
+  try {
+    const { status, customer_id, limit = 50, offset = 0 } = req.query;
+    const orders = await database.getAllOrders();
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
   }
-
-  if (customer_id) {
-    query += ' AND o.customer_id = ?';
-    params.push(customer_id);
-  }
-
-  query += ' ORDER BY o.created_at DESC LIMIT ? OFFSET ?';
-  params.push(parseInt(limit), parseInt(offset));
-
-  db.all(query, params, (err, rows) => {
-    if (err) {
-      console.error('Error fetching orders:', err);
-      return res.status(500).json({ error: 'Failed to fetch orders' });
-    }
-    res.json(rows);
-  });
 });
 
-// GET /api/orders/:id - Get single order with items
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  
-  const orderQuery = `
-    SELECT o.*, c.name as customer_name, c.email as customer_email, 
-           c.address, c.city, c.postal_code, c.country
-    FROM orders o
-    JOIN customers c ON o.customer_id = c.id
-    WHERE o.id = ?
-  `;
-
-  db.get(orderQuery, [id], (err, order) => {
-    if (err) {
-      console.error('Error fetching order:', err);
-      return res.status(500).json({ error: 'Failed to fetch order' });
-    }
+// GET /api/orders/:id - Get single order with items (requires authentication)
+router.get('/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await database.getOrderById(id);
+    
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-
-    // Get order items
-    const itemsQuery = `
-      SELECT oi.*, p.name as product_name, p.sku, p.unit_of_measure
-      FROM order_items oi
-      JOIN products p ON oi.product_id = p.id
-      WHERE oi.order_id = ?
-    `;
-
-    db.all(itemsQuery, [id], (err, items) => {
-      if (err) {
-        console.error('Error fetching order items:', err);
-        return res.status(500).json({ error: 'Failed to fetch order items' });
-      }
-
-      order.items = items;
-      res.json(order);
-    });
-  });
+    
+    res.json(order);
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    res.status(500).json({ error: 'Failed to fetch order' });
+  }
 });
 
-// POST /api/orders - Create new order
-router.post('/', (req, res) => {
-  const { customer_id, required_date, notes, items } = req.body;
+// POST /api/orders - Create new order (requires authentication)
+router.post('/', authenticateToken, async (req, res) => {
+  try {
+    const { customer_id, required_date, notes, items } = req.body;
 
-  if (!customer_id || !items || items.length === 0) {
-    return res.status(400).json({ error: 'Customer ID and items are required' });
-  }
-
-  // Generate order number
-  const orderNumber = `ORD-${Date.now()}`;
-  const orderDate = new Date().toISOString().split('T')[0];
-
-  // Calculate total amount
-  let totalAmount = 0;
-  items.forEach(item => {
-    totalAmount += item.quantity * item.unit_price;
-  });
-
-  db.serialize(() => {
-    db.run('BEGIN TRANSACTION');
-
-    // Insert order
-    const orderQuery = `
-      INSERT INTO orders (order_number, customer_id, order_date, required_date, total_amount, notes, status)
-      VALUES (?, ?, ?, ?, ?, ?, 'pending')
-    `;
-
-    db.run(orderQuery, [orderNumber, customer_id, orderDate, required_date, totalAmount, notes], function(err) {
-      if (err) {
-        console.error('Error creating order:', err);
-        db.run('ROLLBACK');
-        return res.status(500).json({ error: 'Failed to create order' });
-      }
-
-      const orderId = this.lastID;
-
-      // Insert order items
-      const itemQuery = `
-        INSERT INTO order_items (order_id, product_id, quantity, unit_price, total_price)
-        VALUES (?, ?, ?, ?, ?)
-      `;
-
-      let itemsInserted = 0;
-      let hasError = false;
-
-      items.forEach(item => {
-        const totalPrice = item.quantity * item.unit_price;
-        
-        db.run(itemQuery, [orderId, item.product_id, item.quantity, item.unit_price, totalPrice], function(err) {
-          if (err && !hasError) {
-            console.error('Error creating order item:', err);
-            hasError = true;
-            db.run('ROLLBACK');
-            return res.status(500).json({ error: 'Failed to create order items' });
-          }
-
-          itemsInserted++;
-          if (itemsInserted === items.length && !hasError) {
-            db.run('COMMIT');
-            res.status(201).json({ 
-              id: orderId, 
-              order_number: orderNumber,
-              message: 'Order created successfully' 
-            });
-          }
-        });
-      });
-    });
-  });
-});
-
-// PUT /api/orders/:id/status - Update order status
-router.put('/:id/status', (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-
-  const validStatuses = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
-  if (!validStatuses.includes(status)) {
-    return res.status(400).json({ error: 'Invalid status' });
-  }
-
-  const query = 'UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
-
-  db.run(query, [status, id], function(err) {
-    if (err) {
-      console.error('Error updating order status:', err);
-      return res.status(500).json({ error: 'Failed to update order status' });
+    if (!customer_id || !items || items.length === 0) {
+      return res.status(400).json({ error: 'Customer ID and items are required' });
     }
-    if (this.changes === 0) {
+
+    const orderData = {
+      customer_id,
+      required_date,
+      notes,
+      items
+    };
+
+    const order = await database.createOrder(orderData);
+    res.status(201).json({ 
+      id: order.id, 
+      order_number: order.order_number,
+      message: 'Order created successfully',
+      order 
+    });
+  } catch (error) {
+    console.error('Error creating order:', error);
+    res.status(500).json({ error: 'Failed to create order' });
+  }
+});
+
+// PUT /api/orders/:id/status - Update order status (admin only)
+router.put('/:id/status', authenticateToken, authorizeRoles(['admin']), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    const order = await database.updateOrderStatus(id, status);
+    
+    if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-    res.json({ message: 'Order status updated successfully' });
-  });
+    
+    res.json({ 
+      message: 'Order status updated successfully',
+      order 
+    });
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    res.status(500).json({ error: 'Failed to update order status' });
+  }
+});
+
+// PUT /api/orders/:id - Update order (requires authentication)
+router.put('/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { customer_id, required_date, notes, items } = req.body;
+
+    const orderData = {
+      customer_id,
+      required_date,
+      notes,
+      items
+    };
+
+    const order = await database.updateOrder(id, orderData);
+    
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    res.json({ 
+      message: 'Order updated successfully',
+      order 
+    });
+  } catch (error) {
+    console.error('Error updating order:', error);
+    res.status(500).json({ error: 'Failed to update order' });
+  }
+});
+
+// DELETE /api/orders/:id - Delete order (admin only)
+router.delete('/:id', authenticateToken, authorizeRoles(['admin']), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const success = await database.deleteOrder(id);
+    
+    if (!success) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    res.json({ message: 'Order deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ error: 'Failed to delete order' });
+  }
 });
 
 module.exports = router;

@@ -13,18 +13,34 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate authentication - in real app, this would call an API
-    setTimeout(() => {
-      setIsLoading(false);
-      // For demo purposes, accept any email/password
-      if (email && password) {
+    try {
+      const response = await fetch('http://localhost:5003/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Store authentication data
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userEmail', email);
+        localStorage.setItem('authToken', data.data.token);
+        localStorage.setItem('userRole', 'manager'); // Simplified to just one admin role
+        
         navigate('/dashboard');
       } else {
-        alert('Please enter both email and password');
+        alert(data.message || 'Login failed. Please check your credentials.');
       }
-    }, 1000);
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login failed. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -163,30 +179,28 @@ const Login: React.FC = () => {
             </form>
 
             <div className="mt-8 text-center">
-              <p className="text-white/80 text-sm">
+              <p className="text-white/80 text-sm mb-4">
                 Don't have an account?{' '}
                 <button type="button" className="text-white font-medium hover:underline bg-transparent border-none cursor-pointer">
                   Contact your administrator
                 </button>
               </p>
+              
+              {/* Admin Credentials */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <p className="text-white/90 text-xs font-medium mb-2">🔐 Admin Credentials:</p>
+                <div className="text-white/80 text-xs space-y-1">
+                  <p><span className="font-medium">Email:</span> admin@medsup.co.uk</p>
+                  <p><span className="font-medium">Password:</span> MedsupAdmin2024!</p>
+                </div>
+                <p className="text-white/60 text-xs mt-2 italic">
+                  Other roles: manager@medsup.co.uk, sales@medsup.co.uk (same password)
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Demo Credentials */}
-          <div className="mt-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6">
-            <h3 className="text-white font-semibold mb-3 flex items-center">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-              Demo Access
-            </h3>
-            <p className="text-purple-100 text-sm mb-3">
-              For demonstration purposes, use any email and password to login.
-            </p>
-            <div className="bg-white/5 rounded-xl p-3 text-sm">
-              <p className="text-white font-medium mb-1">Example:</p>
-              <p className="text-purple-200">Email: demo@medsupinnovations.com</p>
-              <p className="text-purple-200">Password: demo123</p>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>

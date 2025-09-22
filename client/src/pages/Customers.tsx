@@ -295,10 +295,22 @@ const Customers: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex space-x-1">
-                  <button className="p-2 text-purple-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors">
+                  <button 
+                    onClick={() => alert(`Edit customer: ${customer.name}\nEdit functionality coming soon!`)}
+                    className="p-2 text-purple-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                    title="Edit Customer"
+                  >
                     <Edit className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-purple-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                  <button 
+                    onClick={() => {
+                      if (window.confirm(`Are you sure you want to delete ${customer.name}?`)) {
+                        alert('Delete functionality coming soon!');
+                      }
+                    }}
+                    className="p-2 text-purple-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Delete Customer"
+                  >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
