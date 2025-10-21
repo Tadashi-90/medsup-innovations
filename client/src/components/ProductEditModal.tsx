@@ -117,7 +117,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
         formDataToSend.append('image', selectedImage);
       }
 
-      const response = await fetch(`http://localhost:5000/api/products/${product.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${product.id}`, {
         method: 'PUT',
         body: formDataToSend,
       });
