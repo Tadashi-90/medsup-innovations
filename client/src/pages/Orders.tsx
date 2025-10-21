@@ -477,6 +477,16 @@ const Orders: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Order Edit Modal */}
+      {editModalOpen && editSelectedOrder && (
+        <OrderEditModal
+          order={editSelectedOrder}
+          isOpen={editModalOpen}
+          onClose={handleCloseEditModal}
+          onSave={handleSaveOrder}
+        />
+      )}
     </div>
   );
 };
