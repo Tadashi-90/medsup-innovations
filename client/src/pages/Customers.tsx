@@ -437,6 +437,16 @@ const Customers: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Edit Customer Modal */}
+      {selectedCustomer && (
+        <CustomerEditModal
+          customer={selectedCustomer}
+          isOpen={editModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveCustomer}
+        />
+      )}
     </div>
   );
 };
