@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Edit, Trash2, Package, Filter } from 'lucide-react';
+import ProductEditModal from '../components/ProductEditModal';
 
 interface Product {
   id: string;
@@ -30,6 +31,7 @@ interface Product {
   dimensions_cm: string;
   barcode: string;
   qr_code: string | null;
+  image_url?: string;
   created_at: string;
   updated_at: string;
   current_stock: number;
@@ -43,13 +45,15 @@ const Products: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5003/api/products');
+        const response = await fetch('http://localhost:5000/api/products');
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
@@ -84,6 +88,24 @@ const Products: React.FC = () => {
     if (current <= minimum) return { status: 'Low Stock', color: 'text-red-600 bg-red-50' };
     if (current <= minimum * 1.5) return { status: 'Medium Stock', color: 'text-yellow-600 bg-yellow-50' };
     return { status: 'Good Stock', color: 'text-green-600 bg-green-50' };
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setEditModalOpen(true);
+  };
+
+  const handleSaveProduct = (updatedProduct: Product) => {
+    setProducts(prevProducts => 
+      prevProducts.map(p => p.id === updatedProduct.id ? updatedProduct : p)
+    );
+    setEditModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleCloseModal = () => {
+    setEditModalOpen(false);
+    setSelectedProduct(null);
   };
 
   if (loading) {
@@ -218,7 +240,7 @@ const Products: React.FC = () => {
               {/* Action Buttons */}
               <div className="mt-4 flex justify-end space-x-2">
                 <button
-                  onClick={() => alert(`Edit product: ${product.name}\nEdit functionality coming soon!`)}
+                  onClick={() => handleEditProduct(product)}
                   className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors duration-200"
                   title="Edit Product"
                 >
@@ -249,6 +271,16 @@ const Products: React.FC = () => {
           <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
           <p className="text-purple-600">Try adjusting your search or filter criteria</p>
         </div>
+      )}
+
+      {/* Edit Modal */}
+      {selectedProduct && (
+        <ProductEditModal
+          product={selectedProduct}
+          isOpen={editModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveProduct}
+        />
       )}
     </div>
   );

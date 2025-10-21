@@ -1,7 +1,44 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const database = require('../database/postgres');
 const { authenticateToken, authorizeRoles, optionalAuth } = require('../middleware/auth');
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = 'uploads/products';
+    // Ensure directory exists
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    // Generate unique filename with timestamp
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // Accept only image files
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'), false);
+  }
+};
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  }
+});
 
 // GET /api/products - Get all products with optional filtering
 router.get('/', async (req, res) => {
@@ -92,23 +129,81 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/products/:id - Update product
-router.put('/:id', async (req, res) => {
+// POST /api/products/upload/:id - Upload product image
+router.post('/upload/:id', upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
+    
+    if (!req.file) {
+      return res.status(400).json({ error: 'No image file provided' });
+    }
+
+    // Update product with image path
+    const imagePath = `/uploads/products/${req.file.filename}`;
+    const query = 'UPDATE products SET image_url = $1 WHERE id = $2 RETURNING *';
+    const result = await database.query(query, [imagePath, id]);
+    
+    if (result.rows.length === 0) {
+      // Delete uploaded file if product not found
+      fs.unlinkSync(req.file.path);
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    
+    res.json({ 
+      message: 'Image uploaded successfully',
+      image_url: imagePath,
+      product: result.rows[0]
+    });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    // Clean up uploaded file on error
+    if (req.file) {
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (unlinkError) {
+        console.error('Error deleting uploaded file:', unlinkError);
+      }
+    }
+    res.status(500).json({ error: 'Failed to upload image' });
+  }
+});
+
+// PUT /api/products/:id - Update product
+router.put('/:id', upload.single('image'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Extract all possible fields from request body
     const {
-      name, description, category, sku, manufacturer,
-      unit_price, cost_price, unit_of_measure, reorder_point, reorder_quantity
+      name, description, category, subcategory, sku, manufacturer, model_number,
+      unit_price, cost_price, unit_of_measure, reorder_point, reorder_quantity,
+      lead_time_days, regulatory_approval, shelf_life_months, weight_kg,
+      dimensions_cm, barcode, storage_requirements, lot_tracking_required,
+      expiry_tracking_required, temperature_controlled, hazardous_material,
+      is_active, storage_temperature_min, storage_temperature_max, qr_code
     } = req.body;
 
     const productData = {
-      name, description, category, sku, manufacturer,
-      unit_price, cost_price, unit_of_measure, reorder_point, reorder_quantity
+      name, description, category, subcategory, sku, manufacturer, model_number,
+      unit_price, cost_price, unit_of_measure, reorder_point, reorder_quantity,
+      lead_time_days, regulatory_approval, shelf_life_months, weight_kg,
+      dimensions_cm, barcode, storage_requirements, lot_tracking_required,
+      expiry_tracking_required, temperature_controlled, hazardous_material,
+      is_active, storage_temperature_min, storage_temperature_max, qr_code
     };
+
+    // Handle image upload if provided
+    if (req.file) {
+      productData.image_url = `/uploads/products/${req.file.filename}`;
+    }
 
     const product = await database.updateProduct(id, productData);
     
     if (!product) {
+      // Delete uploaded file if product not found
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
       return res.status(404).json({ error: 'Product not found' });
     }
     
@@ -118,6 +213,14 @@ router.put('/:id', async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating product:', error);
+    // Clean up uploaded file on error
+    if (req.file) {
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (unlinkError) {
+        console.error('Error deleting uploaded file:', unlinkError);
+      }
+    }
     res.status(500).json({ error: 'Failed to update product' });
   }
 });

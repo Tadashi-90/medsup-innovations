@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Edit, Trash2, Users, Mail, Phone, MapPin, Package } from 'lucide-react';
+import CustomerEditModal from '../components/CustomerEditModal';
 
 interface Customer {
   id: number;
@@ -24,6 +25,8 @@ const Customers: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
   // Mock data for demo
   useEffect(() => {
@@ -154,6 +157,22 @@ const Customers: React.FC = () => {
     if (totalSpent >= 15000) return { tier: 'Gold', color: 'text-yellow-600 bg-yellow-50' };
     if (totalSpent >= 5000) return { tier: 'Silver', color: 'text-gray-600 bg-gray-50' };
     return { tier: 'Bronze', color: 'text-orange-600 bg-orange-50' };
+  };
+
+  const handleEditCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setEditModalOpen(true);
+  };
+
+  const handleSaveCustomer = (updatedCustomer: Customer) => {
+    setCustomers(prev => prev.map(customer => 
+      customer.id === updatedCustomer.id ? updatedCustomer : customer
+    ));
+  };
+
+  const handleCloseModal = () => {
+    setEditModalOpen(false);
+    setSelectedCustomer(null);
   };
 
   if (loading) {
@@ -296,7 +315,7 @@ const Customers: React.FC = () => {
                 </div>
                 <div className="flex space-x-1">
                   <button 
-                    onClick={() => alert(`Edit customer: ${customer.name}\nEdit functionality coming soon!`)}
+                    onClick={() => handleEditCustomer(customer)}
                     className="p-2 text-purple-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
                     title="Edit Customer"
                   >

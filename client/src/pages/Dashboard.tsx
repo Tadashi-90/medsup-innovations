@@ -38,7 +38,7 @@ const Dashboard: React.FC = () => {
         setLoading(true);
         
         // Fetch dashboard stats
-        const statsResponse = await fetch('http://localhost:5003/api/dashboard', {
+        const statsResponse = await fetch('http://localhost:5000/api/dashboard', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
             'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
         }
 
         // Fetch recent orders
-        const ordersResponse = await fetch('http://localhost:5003/api/orders?limit=5&sort=created_at&order=desc', {
+        const ordersResponse = await fetch('http://localhost:5000/api/orders?limit=5&sort=created_at&order=desc', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
             'Content-Type': 'application/json',

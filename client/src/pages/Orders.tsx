@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Eye, Edit, Package, Clock, CheckCircle, XCircle, Filter } from 'lucide-react';
+import OrderEditModal from '../components/OrderEditModal';
 
 interface OrderItem {
   id: number;
@@ -30,6 +31,8 @@ const Orders: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editSelectedOrder, setEditSelectedOrder] = useState<Order | null>(null);
 
   // Mock data for demo
   useEffect(() => {
@@ -161,6 +164,22 @@ const Orders: React.FC = () => {
   const viewOrderDetails = (order: Order) => {
     setSelectedOrder(order);
     setShowOrderModal(true);
+  };
+
+  const handleEditOrder = (order: Order) => {
+    setEditSelectedOrder(order);
+    setEditModalOpen(true);
+  };
+
+  const handleSaveOrder = (updatedOrder: Order) => {
+    setOrders(prev => prev.map(order => 
+      order.id === updatedOrder.id ? updatedOrder : order
+    ));
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setEditSelectedOrder(null);
   };
 
   if (loading) {
@@ -363,7 +382,7 @@ const Orders: React.FC = () => {
                           <Eye className="w-4 h-4" />
                         </button>
                         <button 
-                          onClick={() => alert(`Edit order: ${order.order_number}\nEdit functionality coming soon!`)}
+                          onClick={() => handleEditOrder(order)}
                           className="text-gray-600 hover:text-gray-900 flex items-center"
                           title="Edit Order"
                         >
